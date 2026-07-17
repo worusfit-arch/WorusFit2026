@@ -53,14 +53,47 @@ const CATEGORIES = [
   { key: "vitaminas", label: "VITAMINAS" },
 ] as const;
 
+// Worus Fit app — same ecosystem, owns the Worus Coins wallet/auth these products can be
+// redeemed against. See @shared/schema COINS_PER_BRL_REDEMPTION in that repo for the rate.
+const APP_URL = import.meta.env.VITE_APP_URL || "https://projeto-jordao-rats.onrender.com";
+
+// Maps this catalog's product ids to the matching slug seeded in the app's `products`
+// table (script/seed-products.ts over there), so we can look up live Worus Coins pricing.
+const PRODUCT_SLUGS: Record<number, string> = {
+  1: "whey-protein-isolate",
+  2: "creatina-monohidratada",
+  3: "pre-treino-inferno",
+  4: "multivitaminico-titan",
+  5: "whey-concentrado-1kg",
+  6: "bcaa-2-1-1",
+  7: "pre-treino-pump",
+  8: "creatina-hd-500g",
+};
+
 function Index() {
   const [filter, setFilter] = useState<string>("todos");
   const [cart, setCart] = useState<Record<number, number>>({});
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [countdown, setCountdown] = useState({ h: 12, m: 0, s: 0 });
+  const [coinPrices, setCoinPrices] = useState<Record<string, number>>({});
   const heroRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+
+  // Live Worus Coins pricing from the app — falls back to "unavailable" (button hidden)
+  // if the app is offline, since this is a real cross-service dependency.
+  useEffect(() => {
+    fetch(`${APP_URL}/api/products`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((rows: { slug: string; priceCoins: number }[]) => {
+        const bySlug: Record<string, number> = {};
+        for (const row of rows) bySlug[row.slug] = row.priceCoins;
+        setCoinPrices(bySlug);
+      })
+      .catch(() => {
+        // App unreachable — Worus Coins CTA simply won't show, R$ checkout still works.
+      });
+  }, []);
 
   const filtered = useMemo(
     () => (filter === "todos" ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter)),
@@ -154,6 +187,7 @@ function Index() {
             <a href="#beneficios">Benefícios</a>
             <a href="#depoimentos">Atletas</a>
             <a href="#cupom">Cupom</a>
+            <a href="#roleta">Roleta</a>
           </nav>
           <button className="t-cart-btn" onClick={() => setCartOpen(true)} aria-label="Abrir carrinho">
             🛒 <span className="t-cart-badge">{cartCount}</span>
@@ -266,6 +300,17 @@ function Index() {
                 <button className="t-btn t-btn-primary t-btn-sm" onClick={() => addToCart(p.id)}>
                   ADICIONAR 🛒
                 </button>
+                {coinPrices[PRODUCT_SLUGS[p.id]] != null && (
+                  <a
+                    href={`${APP_URL}/store?highlight=${PRODUCT_SLUGS[p.id]}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="t-btn t-btn-ghost t-btn-sm"
+                    style={{ marginTop: 8, width: "100%", textAlign: "center" }}
+                  >
+                    🪙 Comprar com {coinPrices[PRODUCT_SLUGS[p.id]].toLocaleString("pt-BR")} Worus Coins
+                  </a>
+                )}
               </article>
             ))}
           </div>
@@ -314,6 +359,42 @@ function Index() {
               </button>
             </div>
             <div className="t-coupon-art">🔥</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ROLETA WORUS COINS */}
+      <section id="roleta" className="t-section">
+        <div className="t-container">
+          <SectionTitle eyebrow="Todo dia tem prêmio" title="ROLETA WORUS COINS" />
+          <div className="t-coupon">
+            <div>
+              <p>
+                Gire uma vez por dia e ganhe de 5 a 50 Worus Coins — com chance de cair no
+                prêmio dourado. Mantenha sua sequência de treinos no app viva para
+                desbloquear bônus extras a cada 7 dias.
+              </p>
+              <a
+                href={`${APP_URL}/roulette`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="t-btn t-btn-primary"
+                style={{ marginTop: 16, display: "inline-flex" }}
+              >
+                🎡 GIRAR NO APP →
+              </a>
+            </div>
+            <div
+              className="t-coupon-art"
+              style={{
+                width: 96,
+                height: 96,
+                borderRadius: "50%",
+                background:
+                  "conic-gradient(#1a1a1a 0% 25%, #0f2e1f 25% 50%, #0f4a2e 50% 75%, #facc15 75% 100%)",
+                border: "3px solid rgba(255,255,255,0.15)",
+              }}
+            />
           </div>
         </div>
       </section>
