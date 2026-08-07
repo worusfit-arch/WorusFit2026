@@ -105,6 +105,14 @@ function Index() {
     const p = PRODUCTS.find((x) => x.id === Number(id));
     return sum + (p ? p.price * qty : 0);
   }, 0);
+  const coinSubtotal = Object.entries(cart).reduce((sum, [id, qty]) => {
+    const slug = PRODUCT_SLUGS[Number(id)];
+    const priceCoins = coinPrices[slug];
+    return sum + (priceCoins ? priceCoins * qty : 0);
+  }, 0);
+  const canShowCoinSubtotal =
+    cartCount > 0 &&
+    Object.keys(cart).every((id) => coinPrices[PRODUCT_SLUGS[Number(id)]] != null);
 
   // Countdown
   useEffect(() => {
@@ -169,6 +177,9 @@ function Index() {
   const copyCoupon = () => {
     navigator.clipboard?.writeText("TITAN10");
     showToast("Cupom TITAN10 copiado!");
+  };
+  const handleCheckoutInterest = () => {
+    showToast("Checkout online em breve. Veja a loja no app Worus Fit.");
   };
 
   return (
@@ -486,13 +497,32 @@ function Index() {
             })}
           </div>
           <footer>
+            <div className="t-cart-note">
+              <strong>Checkout em preparacao</strong>
+              <span>Use este carrinho para simular o pedido. A compra real e os resgates com coins abrem pelo app.</span>
+            </div>
             <div className="t-subtotal">
               <span>Subtotal</span>
               <strong>R$ {subtotal.toFixed(2)}</strong>
             </div>
-            <button className="t-btn t-btn-primary" disabled={cartCount === 0}>
-              FINALIZAR COMPRA →
+            {canShowCoinSubtotal && (
+              <div className="t-subtotal t-subtotal-coins">
+                <span>Equivalente no app</span>
+                <strong>{coinSubtotal.toLocaleString("pt-BR")} coins</strong>
+              </div>
+            )}
+            <button className="t-btn t-btn-primary" disabled={cartCount === 0} onClick={handleCheckoutInterest}>
+              AVISAR SOBRE CHECKOUT →
             </button>
+            <a
+              href={`${APP_URL}/store`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="t-btn t-btn-ghost"
+              style={{ width: "100%", marginTop: 10 }}
+            >
+              VER LOJA NO APP
+            </a>
           </footer>
         </aside>
       </div>
@@ -865,8 +895,19 @@ const CSS = `
 .t-qty button { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-2); border: 1px solid rgba(255,255,255,.08); color: var(--fg); cursor: pointer; }
 .t-qty span { min-width: 20px; text-align: center; font-weight: 600; }
 .t-drawer-panel footer { padding: 24px; border-top: 1px solid rgba(255,255,255,.06); }
+.t-cart-note {
+  border: 1px solid rgba(255,106,0,.22);
+  background: rgba(255,106,0,.08);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.t-cart-note strong { display: block; font-size: 13px; margin-bottom: 4px; color: var(--ember); }
+.t-cart-note span { display: block; font-size: 12px; line-height: 1.45; color: var(--muted); }
 .t-subtotal { display: flex; justify-content: space-between; margin-bottom: 16px; }
 .t-subtotal strong { font-family: 'Oswald'; font-size: 22px; color: var(--accent-glow); }
+.t-subtotal-coins { margin-top: -8px; }
+.t-subtotal-coins strong { font-size: 17px; color: var(--ember); }
 .t-drawer-panel footer .t-btn { width: 100%; }
 
 /* TOAST */

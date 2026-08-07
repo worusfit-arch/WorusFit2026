@@ -29,16 +29,16 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "A premium e-commerce website for sports supplements, built as a single HTML file with embedded CSS and JavaScript." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "A premium e-commerce website for sports supplements, built as a single HTML file with embedded CSS and JavaScript." },
+      { title: "Titan Supp - Suplementos de Alta Performance" },
+      { name: "description", content: "Loja de suplementos esportivos integrada ao ecossistema Worus Fit." },
+      { name: "author", content: "Worus Fit" },
+      { property: "og:title", content: "Titan Supp - Suplementos de Alta Performance" },
+      { property: "og:description", content: "Suplementos esportivos, Worus Coins e desafios fitness em um unico ecossistema." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "A premium e-commerce website for sports supplements, built as a single HTML file with embedded CSS and JavaScript." },
+      { name: "twitter:site", content: "@worusfit" },
+      { name: "twitter:title", content: "Titan Supp - Suplementos de Alta Performance" },
+      { name: "twitter:description", content: "Loja de suplementos esportivos integrada ao ecossistema Worus Fit." },
     ],
     links: [
       {
@@ -59,7 +59,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
