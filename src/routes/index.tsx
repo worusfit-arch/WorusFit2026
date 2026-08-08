@@ -25,29 +25,58 @@ export const Route = createFileRoute("/")({
 
 type Product = {
   id: number;
-  name: string;
+  name: { pt: string; en: string };
   category: "proteinas" | "pre-treino" | "creatina" | "acessorios";
   price: number;
   oldPrice?: number;
   image: string;
-  tag?: string;
-  desc: string;
+  tag?: { pt: string; en: string };
+  desc: { pt: string; en: string };
 };
 
+type Language = "pt" | "en";
+
 const PRODUCTS: Product[] = [
-  { id: 1, name: "Whey Protein 900g", category: "proteinas", price: 189.9, image: "/products/whey.webp", tag: "PREVIEW", desc: "Produto ilustrativo para a futura seleção de suplementos." },
-  { id: 2, name: "Creatina Monohidratada", category: "creatina", price: 99.9, image: "/products/creatine.webp", tag: "PREVIEW", desc: "Referência visual para resgate ou desconto com parceiros." },
-  { id: 3, name: "Pré-treino", category: "pre-treino", price: 149.9, image: "/products/preworkout.webp", tag: "PREVIEW", desc: "Exemplo de item para o catálogo em preparação." },
-  { id: 4, name: "Kit de treino", category: "acessorios", price: 129.9, image: "/products/training-kit.webp", tag: "PARCEIROS", desc: "Camiseta, coqueteleira e toalha para futuras parcerias." },
+  { id: 1, name: { pt: "Whey Protein 900g", en: "Whey Protein 900g" }, category: "proteinas", price: 189.9, image: "/products/whey.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Produto ilustrativo para a futura seleção de suplementos.", en: "Illustrative item for the future supplement collection." } },
+  { id: 2, name: { pt: "Creatina Monohidratada", en: "Creatine Monohydrate" }, category: "creatina", price: 99.9, image: "/products/creatine.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Referência visual para resgate ou desconto com parceiros.", en: "Visual reference for rewards or partner discounts." } },
+  { id: 3, name: { pt: "Pré-treino", en: "Pre-workout" }, category: "pre-treino", price: 149.9, image: "/products/preworkout.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Exemplo de item para o catálogo em preparação.", en: "Sample item for the catalog currently in preparation." } },
+  { id: 4, name: { pt: "Kit de treino", en: "Training kit" }, category: "acessorios", price: 129.9, image: "/products/training-kit.webp", tag: { pt: "PARCEIROS", en: "PARTNERS" }, desc: { pt: "Camiseta, coqueteleira e toalha para futuras parcerias.", en: "Shirt, shaker and towel from future partners." } },
 ];
 
 const CATEGORIES = [
-  { key: "todos", label: "TODOS" },
-  { key: "proteinas", label: "PROTEÍNAS" },
-  { key: "pre-treino", label: "PRE-TREINO" },
-  { key: "creatina", label: "CREATINA" },
-  { key: "acessorios", label: "ACESSÓRIOS" },
+  { key: "todos", label: { pt: "TODOS", en: "ALL" } },
+  { key: "proteinas", label: { pt: "PROTEÍNAS", en: "PROTEIN" } },
+  { key: "pre-treino", label: { pt: "PRÉ-TREINO", en: "PRE-WORKOUT" } },
+  { key: "creatina", label: { pt: "CREATINA", en: "CREATINE" } },
+  { key: "acessorios", label: { pt: "ACESSÓRIOS", en: "ACCESSORIES" } },
 ] as const;
+
+const COPY = {
+  pt: {
+    navProducts: "Produtos", navBenefits: "Benefícios", navHow: "Como funciona", navLaunch: "Lançamento", navSpin: "Roleta",
+    openCart: "Abrir carrinho", ecosystem: "Ecossistema Worus Fit", heroOne: "TREINE. EVOLUA.", heroTwo: "CONQUISTE", heroTwoEnd: "BENEFÍCIOS.",
+    heroText: "Um preview da futura loja conectada aos desafios, à sequência de treinos e aos Worus Coins do aplicativo.", previewCta: "VER O PREVIEW", appCta: "ABRIR O APP",
+    productsCount: "Produtos ilustrativos", walletCount: "Carteira integrada", catalogEyebrow: "Catálogo demonstrativo", catalogTitle: "PRODUTOS PLANEJADOS",
+    addSimulation: "ADICIONAR À SIMULAÇÃO", buyWith: "Comprar com", benefitsEyebrow: "Um único ecossistema", benefitsTitle: "COMO A LOJA SE CONECTA AO APP",
+    launchEyebrow: "Lançamento responsável", launchTitle: "LOJA EM", launchAccent: "PREPARAÇÃO", launchText: "O catálogo, os parceiros e a logística serão validados antes de qualquer compra real. Enquanto isso, use esta página para conhecer a proposta.", appPreview: "VER PREVIEW NO APP",
+    spinEyebrow: "Todo dia tem prêmio", spinTitle: "ROLETA WORUS COINS", spinText: "Gire uma vez por dia e ganhe de 5 a 50 Worus Coins. Mantenha sua sequência de treinos ativa para desbloquear bônus extras a cada 7 dias.", spinCta: "GIRAR NO APP",
+    statusEyebrow: "Transparência desde o início", statusTitle: "O QUE JÁ FUNCIONA", store: "LOJA", help: "AJUDA", contact: "CONTATO", launch: "Lançamento", benefits: "Benefícios", openApp: "Abrir aplicativo", helpCenter: "Central de ajuda", storeInApp: "Loja no app",
+    footerText: "Preview da loja integrada ao aplicativo Worus Fit.", footerBottom: "Catálogo demonstrativo", cartTitle: "SEU CARRINHO", emptyCart: "Seu carrinho está vazio.", checkoutTitle: "Checkout em preparação", checkoutText: "Use este carrinho para simular o pedido. A compra real e os resgates com coins abrem pelo app.", subtotal: "Subtotal", appEquivalent: "Equivalente no app", checkoutNotice: "AVISAR SOBRE CHECKOUT", viewStore: "VER LOJA NO APP",
+    added: "Produto adicionado à simulação.", checkoutSoon: "Checkout online em breve. Veja a loja no app Worus Fit.",
+  },
+  en: {
+    navProducts: "Products", navBenefits: "Benefits", navHow: "How it works", navLaunch: "Launch", navSpin: "Daily spin",
+    openCart: "Open cart", ecosystem: "Worus Fit ecosystem", heroOne: "TRAIN. IMPROVE.", heroTwo: "UNLOCK", heroTwoEnd: "BENEFITS.",
+    heroText: "A preview of the future store connected to challenges, workout streaks and Worus Coins in the app.", previewCta: "VIEW PREVIEW", appCta: "OPEN THE APP",
+    productsCount: "Illustrative products", walletCount: "Integrated wallet", catalogEyebrow: "Demo catalog", catalogTitle: "PLANNED PRODUCTS",
+    addSimulation: "ADD TO SIMULATION", buyWith: "Buy with", benefitsEyebrow: "One ecosystem", benefitsTitle: "HOW THE STORE CONNECTS TO THE APP",
+    launchEyebrow: "A responsible launch", launchTitle: "STORE IN", launchAccent: "PREPARATION", launchText: "The catalog, partners and logistics will be validated before any real purchase. For now, use this page to explore the proposal.", appPreview: "VIEW PREVIEW IN APP",
+    spinEyebrow: "A reward every day", spinTitle: "WORUS COINS DAILY SPIN", spinText: "Spin once a day and earn 5 to 50 Worus Coins. Keep your workout streak active to unlock an extra bonus every 7 days.", spinCta: "SPIN IN THE APP",
+    statusEyebrow: "Transparent from day one", statusTitle: "WHAT ALREADY WORKS", store: "STORE", help: "HELP", contact: "CONTACT", launch: "Launch", benefits: "Benefits", openApp: "Open app", helpCenter: "Help center", storeInApp: "Store in app",
+    footerText: "Store preview integrated with the Worus Fit app.", footerBottom: "Demonstration catalog", cartTitle: "YOUR CART", emptyCart: "Your cart is empty.", checkoutTitle: "Checkout in preparation", checkoutText: "Use this cart to simulate an order. Real purchases and coin rewards will open in the app.", subtotal: "Subtotal", appEquivalent: "Equivalent in app", checkoutNotice: "GET CHECKOUT UPDATES", viewStore: "VIEW STORE IN APP",
+    added: "Product added to the simulation.", checkoutSoon: "Online checkout is coming soon. View the store in the Worus Fit app.",
+  },
+} as const;
 
 // Worus Fit app — same ecosystem, owns the Worus Coins wallet/auth these products can be
 // redeemed against. See @shared/schema COINS_PER_BRL_REDEMPTION in that repo for the rate.
@@ -63,6 +92,14 @@ const PRODUCT_SLUGS: Record<number, string> = {
 };
 
 function Index() {
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window === "undefined") return "pt";
+    const saved = window.localStorage.getItem("worus-store-language");
+    if (saved === "pt" || saved === "en") return saved;
+    return navigator.language.toLowerCase().startsWith("en") ? "en" : "pt";
+  });
+  const tx = COPY[language];
+  const locale = language === "en" ? "en-US" : "pt-BR";
   const [filter, setFilter] = useState<string>("todos");
   const [cart, setCart] = useState<Record<number, number>>({});
   const [cartOpen, setCartOpen] = useState(false);
@@ -70,6 +107,11 @@ function Index() {
   const [coinPrices, setCoinPrices] = useState<Record<string, number>>({});
   const heroRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    window.localStorage.setItem("worus-store-language", language);
+    document.documentElement.lang = language === "en" ? "en-US" : "pt-BR";
+  }, [language]);
 
   // Live Worus Coins pricing from the app — falls back to "unavailable" (button hidden)
   // if the app is offline, since this is a real cross-service dependency.
@@ -140,7 +182,7 @@ function Index() {
 
   const addToCart = (id: number) => {
     setCart((c) => ({ ...c, [id]: (c[id] || 0) + 1 }));
-    showToast("Produto adicionado à simulação.");
+    showToast(tx.added);
   };
   const updateQty = (id: number, delta: number) => {
     setCart((c) => {
@@ -153,7 +195,7 @@ function Index() {
   };
 
   const handleCheckoutInterest = () => {
-    showToast("Checkout online em breve. Veja a loja no app Worus Fit.");
+    showToast(tx.checkoutSoon);
   };
 
   return (
@@ -168,15 +210,20 @@ function Index() {
             <span>WORUS FIT <span className="t-logo-accent">STORE</span></span>
           </a>
           <nav className="t-menu">
-            <a href="#produtos">Produtos</a>
-            <a href="#beneficios">Benefícios</a>
-            <a href="#depoimentos">Como funciona</a>
-            <a href="#cupom">Lançamento</a>
-            <a href="#roleta">Roleta</a>
+            <a href="#produtos">{tx.navProducts}</a>
+            <a href="#beneficios">{tx.navBenefits}</a>
+            <a href="#depoimentos">{tx.navHow}</a>
+            <a href="#cupom">{tx.navLaunch}</a>
+            <a href="#roleta">{tx.navSpin}</a>
           </nav>
-          <button className="t-cart-btn" onClick={() => setCartOpen(true)} aria-label="Abrir carrinho">
-            🛒 <span className="t-cart-badge">{cartCount}</span>
-          </button>
+          <div className="t-nav-actions">
+            <div className="t-language" role="group" aria-label="Language / Idioma">
+              {(["pt", "en"] as const).map((option) => <button key={option} type="button" onClick={() => setLanguage(option)} aria-pressed={language === option} className={language === option ? "active" : ""}>{option.toUpperCase()}</button>)}
+            </div>
+            <button className="t-cart-btn" onClick={() => setCartOpen(true)} aria-label={tx.openCart}>
+              🛒 <span className="t-cart-badge">{cartCount}</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -193,19 +240,19 @@ function Index() {
 
         <div className="t-container t-hero-inner">
           <div className="t-hero-copy">
-            <span className="t-eyebrow">Ecossistema Worus Fit</span>
+            <span className="t-eyebrow">{tx.ecosystem}</span>
             <h1 className="t-hero-title">
-              <span className="reveal">TREINE. EVOLUA.</span>
-              <span className="reveal"><span className="t-grad">CONQUISTE</span> BENEFÍCIOS.</span>
+              <span className="reveal">{tx.heroOne}</span>
+              <span className="reveal"><span className="t-grad">{tx.heroTwo}</span> {tx.heroTwoEnd}</span>
             </h1>
             <p className="t-hero-sub">
-              Um preview da futura loja conectada aos desafios, à sequência de treinos e aos Worus Coins do aplicativo.
+              {tx.heroText}
             </p>
             <div className="t-hero-cta">
-              <a href="#produtos" className="t-btn t-btn-primary">VER O PREVIEW</a>
-              <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="t-btn t-btn-ghost">ABRIR O APP</a>
+              <a href="#produtos" className="t-btn t-btn-primary">{tx.previewCta}</a>
+              <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="t-btn t-btn-ghost">{tx.appCta}</a>
             </div>
-            <div className="t-stats"><div className="t-stat"><strong>4</strong><span>Produtos ilustrativos</span></div><div className="t-stat"><strong>1</strong><span>Carteira integrada</span></div></div>
+            <div className="t-stats"><div className="t-stat"><strong>4</strong><span>{tx.productsCount}</span></div><div className="t-stat"><strong>1</strong><span>{tx.walletCount}</span></div></div>
           </div>
 
           <div className="t-hero-stage-wrap">
@@ -222,10 +269,7 @@ function Index() {
         <div className="t-marquee-track">
           {Array.from({ length: 2 }).map((_, k) => (
             <div className="t-marquee-row" key={k}>
-              <span>CATÁLOGO EM PREPARAÇÃO</span>
-              <span>INTEGRADO AO APP WORUS FIT</span>
-              <span>PREÇOS ILUSTRATIVOS</span>
-              <span>RESGATES COM WORUS COINS</span>
+              {(language === "en" ? ["CATALOG IN PREPARATION", "CONNECTED TO THE WORUS FIT APP", "ILLUSTRATIVE PRICES", "WORUS COINS REWARDS"] : ["CATÁLOGO EM PREPARAÇÃO", "INTEGRADO AO APP WORUS FIT", "PREÇOS ILUSTRATIVOS", "RESGATES COM WORUS COINS"]).map((item) => <span key={item}>{item}</span>)}
             </div>
           ))}
         </div>
@@ -234,7 +278,7 @@ function Index() {
       {/* PRODUTOS */}
       <section id="produtos" className="t-section">
         <div className="t-container">
-          <SectionTitle eyebrow="Linha Completa" title="NOSSOS PRODUTOS" />
+          <SectionTitle eyebrow={tx.catalogEyebrow} title={tx.catalogTitle} />
 
           <div className="t-filters">
             {CATEGORIES.map((c) => (
@@ -243,7 +287,7 @@ function Index() {
                 className={`t-chip ${filter === c.key ? "active" : ""}`}
                 onClick={() => setFilter(c.key)}
               >
-                {c.label}
+                {c.label[language]}
               </button>
             ))}
           </div>
@@ -251,16 +295,16 @@ function Index() {
           <div className="t-grid">
             {filtered.map((p) => (
               <article key={p.id} className="t-card">
-                {p.tag && <span className="t-card-tag">{p.tag}</span>}
-                <div className="t-card-img"><img src={p.image} alt={p.name} loading="lazy" /></div>
-                <h3 className="t-card-name">{p.name}</h3>
-                <p className="t-card-desc">{p.desc}</p>
+                {p.tag && <span className="t-card-tag">{p.tag[language]}</span>}
+                <div className="t-card-img"><img src={p.image} alt={p.name[language]} loading="lazy" /></div>
+                <h3 className="t-card-name">{p.name[language]}</h3>
+                <p className="t-card-desc">{p.desc[language]}</p>
                 <div className="t-card-price">
                   {p.oldPrice && <span className="t-old">R$ {p.oldPrice.toFixed(2)}</span>}
                   <span className="t-new">R$ {p.price.toFixed(2)}</span>
                 </div>
                 <button className="t-btn t-btn-primary t-btn-sm" onClick={() => addToCart(p.id)}>
-                  ADICIONAR À SIMULAÇÃO
+                  {tx.addSimulation}
                 </button>
                 {coinPrices[PRODUCT_SLUGS[p.id]] != null && (
                   <a
@@ -270,7 +314,7 @@ function Index() {
                     className="t-btn t-btn-ghost t-btn-sm"
                     style={{ marginTop: 8, width: "100%", textAlign: "center" }}
                   >
-                    🪙 Comprar com {coinPrices[PRODUCT_SLUGS[p.id]].toLocaleString("pt-BR")} Worus Coins
+                    🪙 {tx.buyWith} {coinPrices[PRODUCT_SLUGS[p.id]].toLocaleString(locale)} Worus Coins
                   </a>
                 )}
               </article>
@@ -282,13 +326,20 @@ function Index() {
       {/* BENEFÍCIOS */}
       <section id="beneficios" className="t-section t-section-alt">
         <div className="t-container">
-          <SectionTitle eyebrow="Um único ecossistema" title="COMO A LOJA SE CONECTA AO APP" />
+          <SectionTitle eyebrow={tx.benefitsEyebrow} title={tx.benefitsTitle} />
           <div className="t-features">
             {[
-              { icon: "01", title: "TREINE", desc: "Participe de desafios e mantenha sua sequência ativa no app." },
-              { icon: "02", title: "GANHE COINS", desc: "Check-ins aprovados e recompensas aumentam seu saldo." },
-              { icon: "03", title: "ACOMPANHE", desc: "Consulte seu saldo e o histórico pela carteira Worus Fit." },
-              { icon: "04", title: "RESGATE", desc: "Quando a loja abrir, produtos e descontos aparecerão no app." },
+              ...(language === "en" ? [
+                { icon: "01", title: "TRAIN", desc: "Join challenges and keep your workout streak active in the app." },
+                { icon: "02", title: "EARN COINS", desc: "Approved check-ins and rewards increase your balance." },
+                { icon: "03", title: "TRACK", desc: "View your balance and history in the Worus Fit wallet." },
+                { icon: "04", title: "REDEEM", desc: "When the store opens, products and discounts will appear in the app." },
+              ] : [
+                { icon: "01", title: "TREINE", desc: "Participe de desafios e mantenha sua sequência ativa no app." },
+                { icon: "02", title: "GANHE COINS", desc: "Check-ins aprovados e recompensas aumentam seu saldo." },
+                { icon: "03", title: "ACOMPANHE", desc: "Consulte seu saldo e o histórico pela carteira Worus Fit." },
+                { icon: "04", title: "RESGATE", desc: "Quando a loja abrir, produtos e descontos aparecerão no app." },
+              ])
             ].map((f) => (
               <div key={f.title} className="t-feature">
                 <div className="t-feature-icon">{f.icon}</div>
@@ -305,10 +356,10 @@ function Index() {
         <div className="t-container">
           <div className="t-coupon">
             <div>
-              <span className="t-eyebrow">Lançamento responsável</span>
-              <h2 className="t-coupon-title">LOJA EM <span className="t-grad">PREPARAÇÃO</span></h2>
-              <p>O catálogo, os parceiros e a logística serão validados antes de qualquer compra real. Enquanto isso, use esta página para conhecer a proposta.</p>
-              <a href={`${APP_URL}/store`} target="_blank" rel="noopener noreferrer" className="t-btn t-btn-primary" style={{ marginTop: 20 }}>VER PREVIEW NO APP</a>
+              <span className="t-eyebrow">{tx.launchEyebrow}</span>
+              <h2 className="t-coupon-title">{tx.launchTitle} <span className="t-grad">{tx.launchAccent}</span></h2>
+              <p>{tx.launchText}</p>
+              <a href={`${APP_URL}/store`} target="_blank" rel="noopener noreferrer" className="t-btn t-btn-primary" style={{ marginTop: 20 }}>{tx.appPreview}</a>
             </div>
             <div className="t-coupon-art">W</div>
           </div>
@@ -318,14 +369,10 @@ function Index() {
       {/* ROLETA WORUS COINS */}
       <section id="roleta" className="t-section">
         <div className="t-container">
-          <SectionTitle eyebrow="Todo dia tem prêmio" title="ROLETA WORUS COINS" />
+          <SectionTitle eyebrow={tx.spinEyebrow} title={tx.spinTitle} />
           <div className="t-coupon">
             <div>
-              <p>
-                Gire uma vez por dia e ganhe de 5 a 50 Worus Coins — com chance de cair no
-                prêmio dourado. Mantenha sua sequência de treinos no app viva para
-                desbloquear bônus extras a cada 7 dias.
-              </p>
+              <p>{tx.spinText}</p>
               <a
                 href={`${APP_URL}/roulette`}
                 target="_blank"
@@ -333,7 +380,7 @@ function Index() {
                 className="t-btn t-btn-primary"
                 style={{ marginTop: 16, display: "inline-flex" }}
               >
-                🎡 GIRAR NO APP →
+                {tx.spinCta} →
               </a>
             </div>
             <div
@@ -354,12 +401,18 @@ function Index() {
       {/* DEPOIMENTOS */}
       <section id="depoimentos" className="t-section t-section-alt">
         <div className="t-container">
-          <SectionTitle eyebrow="Transparência desde o início" title="O QUE JÁ FUNCIONA" />
+          <SectionTitle eyebrow={tx.statusEyebrow} title={tx.statusTitle} />
           <div className="t-testimonials">
             {[
-              { n: "Desafios", r: "Disponível no app", t: "Criação de grupos, check-ins e ranking para diferentes esportes." },
-              { n: "Worus Coins", r: "Disponível no app", t: "Carteira, compra por PIX e recompensas da roleta diária." },
-              { n: "Loja", r: "Em preparação", t: "Preview visual enquanto catálogo, parceiros e operação são definidos." },
+              ...(language === "en" ? [
+                { n: "Challenges", r: "Available in app", t: "Groups, check-ins and rankings for different sports." },
+                { n: "Worus Coins", r: "Available in app", t: "Wallet, PIX purchases and daily spin rewards." },
+                { n: "Store", r: "In preparation", t: "Visual preview while catalog, partners and operations are defined." },
+              ] : [
+                { n: "Desafios", r: "Disponível no app", t: "Criação de grupos, check-ins e ranking para diferentes esportes." },
+                { n: "Worus Coins", r: "Disponível no app", t: "Carteira, compra por PIX e recompensas da roleta diária." },
+                { n: "Loja", r: "Em preparação", t: "Preview visual enquanto catálogo, parceiros e operação são definidos." },
+              ])
             ].map((t) => (
               <div key={t.n} className="t-test">
                 <div className="t-stars">STATUS</div>
@@ -383,26 +436,26 @@ function Index() {
                 <span className="t-logo-mark">W</span>
                 <span>WORUS FIT <span className="t-logo-accent">STORE</span></span>
               </a>
-              <p className="t-foot-desc">Preview da loja integrada ao aplicativo Worus Fit.</p>
+              <p className="t-foot-desc">{tx.footerText}</p>
             </div>
             <div>
-              <h5>LOJA</h5>
-              <a href="#produtos">Produtos</a>
-              <a href="#cupom">Lançamento</a>
-              <a href="#beneficios">Benefícios</a>
+              <h5>{tx.store}</h5>
+              <a href="#produtos">{tx.navProducts}</a>
+              <a href="#cupom">{tx.launch}</a>
+              <a href="#beneficios">{tx.benefits}</a>
             </div>
             <div>
-              <h5>AJUDA</h5>
-              <a href={APP_URL} target="_blank" rel="noopener noreferrer">Abrir aplicativo</a>
-              <a href={`${APP_URL}/help`} target="_blank" rel="noopener noreferrer">Central de ajuda</a>
+              <h5>{tx.help}</h5>
+              <a href={APP_URL} target="_blank" rel="noopener noreferrer">{tx.openApp}</a>
+              <a href={`${APP_URL}/help`} target="_blank" rel="noopener noreferrer">{tx.helpCenter}</a>
             </div>
             <div>
-              <h5>CONTATO</h5>
-              <a href={`${APP_URL}/store`} target="_blank" rel="noopener noreferrer">Loja no app</a>
+              <h5>{tx.contact}</h5>
+              <a href={`${APP_URL}/store`} target="_blank" rel="noopener noreferrer">{tx.storeInApp}</a>
             </div>
           </div>
           <div className="t-foot-bot">
-            © {new Date().getFullYear()} Worus Fit Store · Catálogo demonstrativo
+            © {new Date().getFullYear()} Worus Fit Store · {tx.footerBottom}
           </div>
         </div>
       </footer>
@@ -412,18 +465,18 @@ function Index() {
         <div className="t-drawer-back" onClick={() => setCartOpen(false)} />
         <aside className="t-drawer-panel">
           <header>
-            <h3>SEU CARRINHO</h3>
+            <h3>{tx.cartTitle}</h3>
             <button onClick={() => setCartOpen(false)}>✕</button>
           </header>
           <div className="t-drawer-body">
-            {cartCount === 0 && <p className="t-empty">Seu carrinho está vazio.</p>}
+            {cartCount === 0 && <p className="t-empty">{tx.emptyCart}</p>}
             {Object.entries(cart).map(([id, qty]) => {
               const p = PRODUCTS.find((x) => x.id === Number(id))!;
               return (
                 <div className="t-line" key={id}>
                   <div className="t-line-img"><img src={p.image} alt="" /></div>
                   <div className="t-line-info">
-                    <strong>{p.name}</strong>
+                    <strong>{p.name[language]}</strong>
                     <span>R$ {p.price.toFixed(2)}</span>
                   </div>
                   <div className="t-qty">
@@ -437,21 +490,21 @@ function Index() {
           </div>
           <footer>
             <div className="t-cart-note">
-              <strong>Checkout em preparacao</strong>
-              <span>Use este carrinho para simular o pedido. A compra real e os resgates com coins abrem pelo app.</span>
+              <strong>{tx.checkoutTitle}</strong>
+              <span>{tx.checkoutText}</span>
             </div>
             <div className="t-subtotal">
-              <span>Subtotal</span>
+              <span>{tx.subtotal}</span>
               <strong>R$ {subtotal.toFixed(2)}</strong>
             </div>
             {canShowCoinSubtotal && (
               <div className="t-subtotal t-subtotal-coins">
-                <span>Equivalente no app</span>
-                <strong>{coinSubtotal.toLocaleString("pt-BR")} coins</strong>
+                <span>{tx.appEquivalent}</span>
+                <strong>{coinSubtotal.toLocaleString(locale)} coins</strong>
               </div>
             )}
             <button className="t-btn t-btn-primary" disabled={cartCount === 0} onClick={handleCheckoutInterest}>
-              AVISAR SOBRE CHECKOUT →
+              {tx.checkoutNotice} →
             </button>
             <a
               href={`${APP_URL}/store`}
@@ -460,7 +513,7 @@ function Index() {
               className="t-btn t-btn-ghost"
               style={{ width: "100%", marginTop: 10 }}
             >
-              VER LOJA NO APP
+              {tx.viewStore}
             </a>
           </footer>
         </aside>
@@ -522,6 +575,10 @@ const CSS = `
 .t-menu { display: flex; gap: 28px; font-weight: 500; font-size: 14px; }
 .t-menu a { color: var(--muted); transition: color .2s; }
 .t-menu a:hover { color: var(--fg); }
+.t-nav-actions { display: flex; align-items: center; gap: 10px; }
+.t-language { display: inline-flex; height: 38px; padding: 3px; border: 1px solid rgba(255,255,255,.1); border-radius: 8px; background: rgba(0,0,0,.25); }
+.t-language button { min-width: 34px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); font: 700 10px 'Inter', sans-serif; cursor: pointer; }
+.t-language button.active { background: var(--accent); color: #fff; }
 .t-cart-btn {
   position: relative; background: var(--bg-2); border: 1px solid rgba(255,255,255,.08); color: var(--fg);
   width: 44px; height: 44px; border-radius: 12px; cursor: pointer; font-size: 18px; transition: all .2s;
@@ -823,8 +880,10 @@ const CSS = `
 .titan-root :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
 @media (max-width: 640px) {
   .t-container { padding: 0 16px; }
-  .t-nav { height: 64px; }
-  .t-logo { font-size: 17px; }
+  .t-nav { height: 64px; gap: 8px; }
+  .t-logo { font-size: 14px; gap: 5px; }
+  .t-nav-actions { gap: 6px; }
+  .t-language button { min-width: 30px; }
   .t-hero { padding: 56px 0 68px; }
   .t-hero-inner { gap: 24px; }
   .t-hero-title { font-size: 42px; line-height: 1; }
