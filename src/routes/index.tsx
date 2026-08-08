@@ -5,11 +5,11 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "TITAN SUPP · Suplementos de Alta Performance" },
+      { title: "Worus Fit Store · Suplementos e recompensas" },
       {
         name: "description",
         content:
-          "TITAN SUPP · Suplementos premium para atletas. Whey, Creatina, Pre-Treino e mais. Cupom TITAN10 com 10% OFF.",
+          "Preview da Worus Fit Store, integrada aos desafios e Worus Coins do aplicativo.",
       },
     ],
     links: [
@@ -26,23 +26,19 @@ export const Route = createFileRoute("/")({
 type Product = {
   id: number;
   name: string;
-  category: "proteinas" | "pre-treino" | "creatina" | "vitaminas";
+  category: "proteinas" | "pre-treino" | "creatina" | "acessorios";
   price: number;
   oldPrice?: number;
-  emoji: string;
+  image: string;
   tag?: string;
   desc: string;
 };
 
 const PRODUCTS: Product[] = [
-  { id: 1, name: "Whey Protein Isolate", category: "proteinas", price: 189.9, oldPrice: 249.9, emoji: "💪", tag: "BEST SELLER", desc: "30g de proteína por dose · Baixo carbo" },
-  { id: 2, name: "Creatina Monohidratada", category: "creatina", price: 99.9, oldPrice: 139.9, emoji: "⚡", tag: "FORÇA", desc: "300g · Pura · Creapure®" },
-  { id: 3, name: "Pre-Treino Inferno", category: "pre-treino", price: 149.9, emoji: "🔥", tag: "NOVO", desc: "300mg cafeína · Beta-alanina" },
-  { id: 4, name: "Multivitamínico Titan", category: "vitaminas", price: 79.9, oldPrice: 99.9, emoji: "💊", desc: "Fórmula completa · 60 cápsulas" },
-  { id: 5, name: "Whey Concentrado 1Kg", category: "proteinas", price: 129.9, emoji: "🥛", desc: "24g de proteína · 5 sabores" },
-  { id: 6, name: "BCAA 2:1:1", category: "vitaminas", price: 89.9, oldPrice: 119.9, emoji: "🧬", tag: "RECOVERY", desc: "Recuperação muscular acelerada" },
-  { id: 7, name: "Pre-Treino Pump", category: "pre-treino", price: 119.9, emoji: "💥", desc: "Sem cafeína · Vasodilatador" },
-  { id: 8, name: "Creatina HD 500g", category: "creatina", price: 159.9, oldPrice: 199.9, emoji: "🏋️", tag: "PROMO", desc: "Alta dosagem · Atletas avançados" },
+  { id: 1, name: "Whey Protein 900g", category: "proteinas", price: 189.9, image: "/products/whey.webp", tag: "PREVIEW", desc: "Produto ilustrativo para a futura seleção de suplementos." },
+  { id: 2, name: "Creatina Monohidratada", category: "creatina", price: 99.9, image: "/products/creatine.webp", tag: "PREVIEW", desc: "Referência visual para resgate ou desconto com parceiros." },
+  { id: 3, name: "Pré-treino", category: "pre-treino", price: 149.9, image: "/products/preworkout.webp", tag: "PREVIEW", desc: "Exemplo de item para o catálogo em preparação." },
+  { id: 4, name: "Kit de treino", category: "acessorios", price: 129.9, image: "/products/training-kit.webp", tag: "PARCEIROS", desc: "Camiseta, coqueteleira e toalha para futuras parcerias." },
 ];
 
 const CATEGORIES = [
@@ -50,7 +46,7 @@ const CATEGORIES = [
   { key: "proteinas", label: "PROTEÍNAS" },
   { key: "pre-treino", label: "PRE-TREINO" },
   { key: "creatina", label: "CREATINA" },
-  { key: "vitaminas", label: "VITAMINAS" },
+  { key: "acessorios", label: "ACESSÓRIOS" },
 ] as const;
 
 // Worus Fit app — same ecosystem, owns the Worus Coins wallet/auth these products can be
@@ -60,14 +56,10 @@ const APP_URL = import.meta.env.VITE_APP_URL || "https://projeto-jordao-rats.onr
 // Maps this catalog's product ids to the matching slug seeded in the app's `products`
 // table (script/seed-products.ts over there), so we can look up live Worus Coins pricing.
 const PRODUCT_SLUGS: Record<number, string> = {
-  1: "whey-protein-isolate",
+  1: "whey-protein",
   2: "creatina-monohidratada",
-  3: "pre-treino-inferno",
-  4: "multivitaminico-titan",
-  5: "whey-concentrado-1kg",
-  6: "bcaa-2-1-1",
-  7: "pre-treino-pump",
-  8: "creatina-hd-500g",
+  3: "pre-treino",
+  4: "kit-treino",
 };
 
 function Index() {
@@ -75,7 +67,6 @@ function Index() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState({ h: 12, m: 0, s: 0 });
   const [coinPrices, setCoinPrices] = useState<Record<string, number>>({});
   const heroRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -114,19 +105,6 @@ function Index() {
     cartCount > 0 &&
     Object.keys(cart).every((id) => coinPrices[PRODUCT_SLUGS[Number(id)]] != null);
 
-  // Countdown
-  useEffect(() => {
-    const end = Date.now() + 12 * 3600 * 1000;
-    const t = setInterval(() => {
-      const diff = Math.max(0, end - Date.now());
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      setCountdown({ h, m, s });
-    }, 1000);
-    return () => clearInterval(t);
-  }, []);
-
   // Hero spotlight + parallax
   useEffect(() => {
     const hero = heroRef.current;
@@ -162,7 +140,7 @@ function Index() {
 
   const addToCart = (id: number) => {
     setCart((c) => ({ ...c, [id]: (c[id] || 0) + 1 }));
-    showToast("Produto adicionado ao carrinho 🔥");
+    showToast("Produto adicionado à simulação.");
   };
   const updateQty = (id: number, delta: number) => {
     setCart((c) => {
@@ -174,10 +152,6 @@ function Index() {
     });
   };
 
-  const copyCoupon = () => {
-    navigator.clipboard?.writeText("TITAN10");
-    showToast("Cupom TITAN10 copiado!");
-  };
   const handleCheckoutInterest = () => {
     showToast("Checkout online em breve. Veja a loja no app Worus Fit.");
   };
@@ -190,14 +164,14 @@ function Index() {
       <header className="t-header">
         <div className="t-container t-nav">
           <a href="#" className="t-logo">
-            <span className="t-logo-mark">⚡</span>
-            <span>TITAN<span className="t-logo-accent">SUPP</span></span>
+            <span className="t-logo-mark">W</span>
+            <span>WORUS FIT <span className="t-logo-accent">STORE</span></span>
           </a>
           <nav className="t-menu">
             <a href="#produtos">Produtos</a>
             <a href="#beneficios">Benefícios</a>
-            <a href="#depoimentos">Atletas</a>
-            <a href="#cupom">Cupom</a>
+            <a href="#depoimentos">Como funciona</a>
+            <a href="#cupom">Lançamento</a>
             <a href="#roleta">Roleta</a>
           </nav>
           <button className="t-cart-btn" onClick={() => setCartOpen(true)} aria-label="Abrir carrinho">
@@ -219,43 +193,24 @@ function Index() {
 
         <div className="t-container t-hero-inner">
           <div className="t-hero-copy">
-            <span className="t-eyebrow">🔥 Performance sem limites</span>
+            <span className="t-eyebrow">Ecossistema Worus Fit</span>
             <h1 className="t-hero-title">
-              <span className="reveal">DESPERTE O</span>
-              <span className="reveal"><span className="t-grad">TITAN</span> EM VOCÊ</span>
+              <span className="reveal">TREINE. EVOLUA.</span>
+              <span className="reveal"><span className="t-grad">CONQUISTE</span> BENEFÍCIOS.</span>
             </h1>
             <p className="t-hero-sub">
-              Suplementos premium · testados em laboratório · formulados para quem
-              treina pesado e quer resultado de verdade.
+              Um preview da futura loja conectada aos desafios, à sequência de treinos e aos Worus Coins do aplicativo.
             </p>
             <div className="t-hero-cta">
-              <a href="#produtos" className="t-btn t-btn-primary">VER PRODUTOS →</a>
-              <a href="#cupom" className="t-btn t-btn-ghost">CUPOM 10% OFF</a>
+              <a href="#produtos" className="t-btn t-btn-primary">VER O PREVIEW</a>
+              <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="t-btn t-btn-ghost">ABRIR O APP</a>
             </div>
-            <div className="t-stats">
-              <Stat value={50000} suffix="+" label="Atletas" />
-              <Stat value={120} suffix="+" label="Produtos" />
-              <Stat value={4.9} decimals={1} label="Avaliação" />
-            </div>
+            <div className="t-stats"><div className="t-stat"><strong>4</strong><span>Produtos ilustrativos</span></div><div className="t-stat"><strong>1</strong><span>Carteira integrada</span></div></div>
           </div>
 
           <div className="t-hero-stage-wrap">
             <div className="t-product-halo" />
-            <div className="t-stage" ref={stageRef}>
-              <div className="t-product-3d">
-                <div className="t-lid" />
-                <div className="t-body">
-                  <div className="t-label">
-                    <span className="t-label-top">TITAN</span>
-                    <span className="t-label-mid">WHEY</span>
-                    <span className="t-label-bot">ISOLATE · 900g</span>
-                  </div>
-                </div>
-              </div>
-              <div className="t-badge t-badge-1">+30g Proteína</div>
-              <div className="t-badge t-badge-2">Lab Tested</div>
-              <div className="t-badge t-badge-3">Zero Açúcar</div>
-            </div>
+            <div className="t-stage" ref={stageRef}><img className="t-hero-product-image" src="/products/whey.webp" alt="Preview de Whey Protein" /></div>
           </div>
         </div>
 
@@ -267,12 +222,10 @@ function Index() {
         <div className="t-marquee-track">
           {Array.from({ length: 2 }).map((_, k) => (
             <div className="t-marquee-row" key={k}>
-              <span>🚚 FRETE GRÁTIS ACIMA DE R$199</span>
-              <span>🔬 LAB TESTED</span>
-              <span>💯 GARANTIA DE QUALIDADE</span>
-              <span>⚡ ENVIO EM 24H</span>
-              <span>🏆 +50K ATLETAS</span>
-              <span>🔥 RESULTADO REAL</span>
+              <span>CATÁLOGO EM PREPARAÇÃO</span>
+              <span>INTEGRADO AO APP WORUS FIT</span>
+              <span>PREÇOS ILUSTRATIVOS</span>
+              <span>RESGATES COM WORUS COINS</span>
             </div>
           ))}
         </div>
@@ -299,9 +252,7 @@ function Index() {
             {filtered.map((p) => (
               <article key={p.id} className="t-card">
                 {p.tag && <span className="t-card-tag">{p.tag}</span>}
-                <div className="t-card-img">
-                  <span>{p.emoji}</span>
-                </div>
+                <div className="t-card-img"><img src={p.image} alt={p.name} loading="lazy" /></div>
                 <h3 className="t-card-name">{p.name}</h3>
                 <p className="t-card-desc">{p.desc}</p>
                 <div className="t-card-price">
@@ -309,7 +260,7 @@ function Index() {
                   <span className="t-new">R$ {p.price.toFixed(2)}</span>
                 </div>
                 <button className="t-btn t-btn-primary t-btn-sm" onClick={() => addToCart(p.id)}>
-                  ADICIONAR 🛒
+                  ADICIONAR À SIMULAÇÃO
                 </button>
                 {coinPrices[PRODUCT_SLUGS[p.id]] != null && (
                   <a
@@ -331,15 +282,13 @@ function Index() {
       {/* BENEFÍCIOS */}
       <section id="beneficios" className="t-section t-section-alt">
         <div className="t-container">
-          <SectionTitle eyebrow="Por que TITAN" title="O QUE NOS DIFERENCIA" />
+          <SectionTitle eyebrow="Um único ecossistema" title="COMO A LOJA SE CONECTA AO APP" />
           <div className="t-features">
             {[
-              { icon: "🔬", title: "TESTADO EM LAB", desc: "Cada lote auditado por laboratório independente" },
-              { icon: "🚀", title: "ENVIO RÁPIDO", desc: "Despachamos em até 24h em todo Brasil" },
-              { icon: "🏆", title: "QUALIDADE PREMIUM", desc: "Matérias-primas importadas e certificadas" },
-              { icon: "💬", title: "SUPORTE 24/7", desc: "Atendimento humanizado quando você precisar" },
-              { icon: "🛡️", title: "GARANTIA TOTAL", desc: "Não gostou? Devolvemos seu dinheiro" },
-              { icon: "💳", title: "PARCELE EM 12X", desc: "Sem juros no cartão de crédito" },
+              { icon: "01", title: "TREINE", desc: "Participe de desafios e mantenha sua sequência ativa no app." },
+              { icon: "02", title: "GANHE COINS", desc: "Check-ins aprovados e recompensas aumentam seu saldo." },
+              { icon: "03", title: "ACOMPANHE", desc: "Consulte seu saldo e o histórico pela carteira Worus Fit." },
+              { icon: "04", title: "RESGATE", desc: "Quando a loja abrir, produtos e descontos aparecerão no app." },
             ].map((f) => (
               <div key={f.title} className="t-feature">
                 <div className="t-feature-icon">{f.icon}</div>
@@ -356,20 +305,12 @@ function Index() {
         <div className="t-container">
           <div className="t-coupon">
             <div>
-              <span className="t-eyebrow">⏰ Oferta termina em</span>
-              <div className="t-countdown">
-                <CountBox v={countdown.h} l="HORAS" />
-                <CountBox v={countdown.m} l="MIN" />
-                <CountBox v={countdown.s} l="SEG" />
-              </div>
-              <h2 className="t-coupon-title">GANHE <span className="t-grad">10% OFF</span></h2>
-              <p>Use o cupom abaixo no checkout e economize já no primeiro pedido.</p>
-              <button className="t-coupon-code" onClick={copyCoupon}>
-                <span>TITAN10</span>
-                <span className="t-copy">COPIAR</span>
-              </button>
+              <span className="t-eyebrow">Lançamento responsável</span>
+              <h2 className="t-coupon-title">LOJA EM <span className="t-grad">PREPARAÇÃO</span></h2>
+              <p>O catálogo, os parceiros e a logística serão validados antes de qualquer compra real. Enquanto isso, use esta página para conhecer a proposta.</p>
+              <a href={`${APP_URL}/store`} target="_blank" rel="noopener noreferrer" className="t-btn t-btn-primary" style={{ marginTop: 20 }}>VER PREVIEW NO APP</a>
             </div>
-            <div className="t-coupon-art">🔥</div>
+            <div className="t-coupon-art">W</div>
           </div>
         </div>
       </section>
@@ -413,16 +354,16 @@ function Index() {
       {/* DEPOIMENTOS */}
       <section id="depoimentos" className="t-section t-section-alt">
         <div className="t-container">
-          <SectionTitle eyebrow="Atletas TITAN" title="QUEM USA, RECOMENDA" />
+          <SectionTitle eyebrow="Transparência desde o início" title="O QUE JÁ FUNCIONA" />
           <div className="t-testimonials">
             {[
-              { n: "Carlos Mendes", r: "Atleta · Crossfit", t: "Mudou meu treino. Recuperação muito mais rápida e energia constante." },
-              { n: "Ana Souza", r: "Bodybuilder", t: "Whey de qualidade absurda. Sabor ótimo e resultado nas medidas." },
-              { n: "Rafael Lima", r: "Personal Trainer", t: "Indico para todos os meus alunos. Marca confiável e entrega rápida." },
+              { n: "Desafios", r: "Disponível no app", t: "Criação de grupos, check-ins e ranking para diferentes esportes." },
+              { n: "Worus Coins", r: "Disponível no app", t: "Carteira, compra por PIX e recompensas da roleta diária." },
+              { n: "Loja", r: "Em preparação", t: "Preview visual enquanto catálogo, parceiros e operação são definidos." },
             ].map((t) => (
               <div key={t.n} className="t-test">
-                <div className="t-stars">★★★★★</div>
-                <p>"{t.t}"</p>
+                <div className="t-stars">STATUS</div>
+                <p>{t.t}</p>
                 <div className="t-test-author">
                   <strong>{t.n}</strong>
                   <span>{t.r}</span>
@@ -439,31 +380,29 @@ function Index() {
           <div className="t-foot-grid">
             <div>
               <a href="#" className="t-logo">
-                <span className="t-logo-mark">⚡</span>
-                <span>TITAN<span className="t-logo-accent">SUPP</span></span>
+                <span className="t-logo-mark">W</span>
+                <span>WORUS FIT <span className="t-logo-accent">STORE</span></span>
               </a>
-              <p className="t-foot-desc">Suplementos premium para quem treina pesado.</p>
+              <p className="t-foot-desc">Preview da loja integrada ao aplicativo Worus Fit.</p>
             </div>
             <div>
               <h5>LOJA</h5>
               <a href="#produtos">Produtos</a>
-              <a href="#cupom">Cupom</a>
+              <a href="#cupom">Lançamento</a>
               <a href="#beneficios">Benefícios</a>
             </div>
             <div>
               <h5>AJUDA</h5>
-              <a href="#">Trocas e Devoluções</a>
-              <a href="#">Frete e Entrega</a>
-              <a href="#">FAQ</a>
+              <a href={APP_URL} target="_blank" rel="noopener noreferrer">Abrir aplicativo</a>
+              <a href={`${APP_URL}/help`} target="_blank" rel="noopener noreferrer">Central de ajuda</a>
             </div>
             <div>
               <h5>CONTATO</h5>
-              <a href="#">contato@titansupp.com</a>
-              <a href="#">@titansupp</a>
+              <a href={`${APP_URL}/store`} target="_blank" rel="noopener noreferrer">Loja no app</a>
             </div>
           </div>
           <div className="t-foot-bot">
-            © {new Date().getFullYear()} TITAN SUPP · Todos os direitos reservados
+            © {new Date().getFullYear()} Worus Fit Store · Catálogo demonstrativo
           </div>
         </div>
       </footer>
@@ -482,7 +421,7 @@ function Index() {
               const p = PRODUCTS.find((x) => x.id === Number(id))!;
               return (
                 <div className="t-line" key={id}>
-                  <div className="t-line-img">{p.emoji}</div>
+                  <div className="t-line-img"><img src={p.image} alt="" /></div>
                   <div className="t-line-info">
                     <strong>{p.name}</strong>
                     <span>R$ {p.price.toFixed(2)}</span>
@@ -538,50 +477,6 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
     <div className="t-section-title">
       <span className="t-eyebrow">{eyebrow}</span>
       <h2>{title}</h2>
-    </div>
-  );
-}
-
-function CountBox({ v, l }: { v: number; l: string }) {
-  return (
-    <div className="t-count-box">
-      <strong>{String(v).padStart(2, "0")}</strong>
-      <span>{l}</span>
-    </div>
-  );
-}
-
-function Stat({ value, suffix = "", decimals = 0, label }: { value: number; suffix?: string; decimals?: number; label: string }) {
-  const [n, setN] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const start = performance.now();
-          const dur = 1400;
-          const tick = (t: number) => {
-            const p = Math.min(1, (t - start) / dur);
-            setN(value * (1 - Math.pow(1 - p, 3)));
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-          io.disconnect();
-        }
-      });
-    });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [value]);
-  return (
-    <div className="t-stat" ref={ref}>
-      <strong>
-        {decimals ? n.toFixed(decimals) : Math.round(n).toLocaleString("pt-BR")}
-        {suffix}
-      </strong>
-      <span>{label}</span>
     </div>
   );
 }
@@ -724,6 +619,7 @@ const CSS = `
   position: relative; width: 220px; height: 340px;
   filter: drop-shadow(0 30px 40px rgba(0,0,0,.6));
 }
+.t-hero-product-image { width: min(430px, 80vw); aspect-ratio: 1; object-fit: cover; border-radius: 8px; box-shadow: 0 28px 70px rgba(0,0,0,.55); }
 .t-lid {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 180px; height: 50px; border-radius: 12px 12px 4px 4px;
@@ -805,8 +701,10 @@ const CSS = `
 .t-card-img {
   height: 160px; border-radius: 12px; margin-bottom: 16px;
   background: radial-gradient(circle at 50% 60%, rgba(225,6,0,.2), transparent 70%), var(--bg-3);
-  display: grid; place-items: center; font-size: 70px;
+  display: grid; place-items: center; overflow: hidden;
 }
+.t-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+.t-card:hover .t-card-img img { transform: scale(1.035); }
 .t-card-name { font-size: 20px; margin-bottom: 6px; text-transform: uppercase; }
 .t-card-desc { font-size: 13px; color: var(--muted); margin: 0 0 16px; line-height: 1.5; }
 .t-card-price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
@@ -888,7 +786,8 @@ const CSS = `
 .t-drawer-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
 .t-empty { color: var(--muted); text-align: center; padding: 40px 0; }
 .t-line { display: grid; grid-template-columns: 60px 1fr auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
-.t-line-img { width: 60px; height: 60px; border-radius: 10px; background: var(--bg-2); display: grid; place-items: center; font-size: 28px; }
+.t-line-img { width: 60px; height: 60px; border-radius: 10px; background: var(--bg-2); display: grid; place-items: center; overflow: hidden; }
+.t-line-img img { width: 100%; height: 100%; object-fit: cover; }
 .t-line-info strong { display: block; font-size: 14px; }
 .t-line-info span { font-size: 13px; color: var(--accent-glow); font-weight: 600; }
 .t-qty { display: flex; align-items: center; gap: 8px; }
@@ -918,4 +817,33 @@ const CSS = `
   box-shadow: 0 10px 40px rgba(0,0,0,.5); animation: toastIn .3s;
 }
 @keyframes toastIn { from { transform: translate(-50%, 20px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .titan-root *, .titan-root *::before, .titan-root *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+.titan-root :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+@media (max-width: 640px) {
+  .t-container { padding: 0 16px; }
+  .t-nav { height: 64px; }
+  .t-logo { font-size: 17px; }
+  .t-hero { padding: 56px 0 68px; }
+  .t-hero-inner { gap: 24px; }
+  .t-hero-title { font-size: 42px; line-height: 1; }
+  .t-hero-sub { font-size: 15px; margin-bottom: 24px; }
+  .t-hero-cta { margin-bottom: 30px; }
+  .t-hero-cta .t-btn { width: 100%; }
+  .t-stats { gap: 20px; }
+  .t-stat strong { font-size: 24px; }
+  .t-hero-stage-wrap { min-height: 320px; }
+  .t-product-halo { width: 290px; height: 290px; }
+  .t-section { padding: 64px 0; }
+  .t-section-title { margin-bottom: 34px; }
+  .t-section-title h2 { font-size: 34px; }
+  .t-grid { grid-template-columns: 1fr; }
+  .t-card, .t-features, .t-coupon, .t-test { border-radius: 8px; }
+  .t-coupon { padding: 24px 18px; }
+  .t-coupon-art { font-size: 72px; }
+  .t-foot-grid { grid-template-columns: 1fr; gap: 28px; }
+  .t-drawer-panel header, .t-drawer-panel footer { padding: 18px 16px; }
+  .t-drawer-body { padding: 12px 16px; }
+}
 `;

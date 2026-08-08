@@ -29,15 +29,15 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Titan Supp - Suplementos de Alta Performance" },
+      { title: "Worus Fit Store - Suplementos e recompensas" },
       { name: "description", content: "Loja de suplementos esportivos integrada ao ecossistema Worus Fit." },
       { name: "author", content: "Worus Fit" },
-      { property: "og:title", content: "Titan Supp - Suplementos de Alta Performance" },
+      { property: "og:title", content: "Worus Fit Store - Suplementos e recompensas" },
       { property: "og:description", content: "Suplementos esportivos, Worus Coins e desafios fitness em um unico ecossistema." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@worusfit" },
-      { name: "twitter:title", content: "Titan Supp - Suplementos de Alta Performance" },
+      { name: "twitter:title", content: "Worus Fit Store - Suplementos e recompensas" },
       { name: "twitter:description", content: "Loja de suplementos esportivos integrada ao ecossistema Worus Fit." },
     ],
     links: [
