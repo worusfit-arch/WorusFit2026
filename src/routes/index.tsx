@@ -28,6 +28,7 @@ type Product = {
   name: { pt: string; en: string };
   category: "proteinas" | "pre-treino" | "creatina" | "acessorios";
   price: number;
+  priceUSD: number;
   oldPrice?: number;
   image: string;
   tag?: { pt: string; en: string };
@@ -37,10 +38,10 @@ type Product = {
 type Language = "pt" | "en";
 
 const PRODUCTS: Product[] = [
-  { id: 1, name: { pt: "Whey Protein 900g", en: "Whey Protein 900g" }, category: "proteinas", price: 189.9, image: "/products/whey.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Produto ilustrativo para a futura seleção de suplementos.", en: "Illustrative item for the future supplement collection." } },
-  { id: 2, name: { pt: "Creatina Monohidratada", en: "Creatine Monohydrate" }, category: "creatina", price: 99.9, image: "/products/creatine.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Referência visual para resgate ou desconto com parceiros.", en: "Visual reference for rewards or partner discounts." } },
-  { id: 3, name: { pt: "Pré-treino", en: "Pre-workout" }, category: "pre-treino", price: 149.9, image: "/products/preworkout.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Exemplo de item para o catálogo em preparação.", en: "Sample item for the catalog currently in preparation." } },
-  { id: 4, name: { pt: "Kit de treino", en: "Training kit" }, category: "acessorios", price: 129.9, image: "/products/training-kit.webp", tag: { pt: "PARCEIROS", en: "PARTNERS" }, desc: { pt: "Camiseta, coqueteleira e toalha para futuras parcerias.", en: "Shirt, shaker and towel from future partners." } },
+  { id: 1, name: { pt: "Whey Protein 900g", en: "Whey Protein 900g" }, category: "proteinas", price: 189.9, priceUSD: 37.99, image: "/products/whey.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Produto ilustrativo para a futura seleção de suplementos.", en: "Illustrative item for the future supplement collection." } },
+  { id: 2, name: { pt: "Creatina Monohidratada", en: "Creatine Monohydrate" }, category: "creatina", price: 99.9, priceUSD: 19.99, image: "/products/creatine.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Referência visual para resgate ou desconto com parceiros.", en: "Visual reference for rewards or partner discounts." } },
+  { id: 3, name: { pt: "Pré-treino", en: "Pre-workout" }, category: "pre-treino", price: 149.9, priceUSD: 29.99, image: "/products/preworkout.webp", tag: { pt: "PREVIEW", en: "PREVIEW" }, desc: { pt: "Exemplo de item para o catálogo em preparação.", en: "Sample item for the catalog currently in preparation." } },
+  { id: 4, name: { pt: "Kit de treino", en: "Training kit" }, category: "acessorios", price: 129.9, priceUSD: 25.99, image: "/products/training-kit.webp", tag: { pt: "PARCEIROS", en: "PARTNERS" }, desc: { pt: "Camiseta, coqueteleira e toalha para futuras parcerias.", en: "Shirt, shaker and towel from future partners." } },
 ];
 
 const CATEGORIES = [
@@ -100,6 +101,8 @@ function Index() {
   });
   const tx = COPY[language];
   const locale = language === "en" ? "en-US" : "pt-BR";
+  const currency = language === "en" ? "USD" : "BRL";
+  const formatPrice = (product: Product) => new Intl.NumberFormat(locale, { style: "currency", currency }).format(language === "en" ? product.priceUSD : product.price);
   const [filter, setFilter] = useState<string>("todos");
   const [cart, setCart] = useState<Record<number, number>>({});
   const [cartOpen, setCartOpen] = useState(false);
@@ -136,7 +139,7 @@ function Index() {
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
   const subtotal = Object.entries(cart).reduce((sum, [id, qty]) => {
     const p = PRODUCTS.find((x) => x.id === Number(id));
-    return sum + (p ? p.price * qty : 0);
+    return sum + (p ? (language === "en" ? p.priceUSD : p.price) * qty : 0);
   }, 0);
   const coinSubtotal = Object.entries(cart).reduce((sum, [id, qty]) => {
     const slug = PRODUCT_SLUGS[Number(id)];
@@ -300,8 +303,8 @@ function Index() {
                 <h3 className="t-card-name">{p.name[language]}</h3>
                 <p className="t-card-desc">{p.desc[language]}</p>
                 <div className="t-card-price">
-                  {p.oldPrice && <span className="t-old">R$ {p.oldPrice.toFixed(2)}</span>}
-                  <span className="t-new">R$ {p.price.toFixed(2)}</span>
+                  {p.oldPrice && language === "pt" && <span className="t-old">R$ {p.oldPrice.toFixed(2)}</span>}
+                  <span className="t-new">{formatPrice(p)}</span>
                 </div>
                 <button className="t-btn t-btn-primary t-btn-sm" onClick={() => addToCart(p.id)}>
                   {tx.addSimulation}
@@ -477,7 +480,7 @@ function Index() {
                   <div className="t-line-img"><img src={p.image} alt="" /></div>
                   <div className="t-line-info">
                     <strong>{p.name[language]}</strong>
-                    <span>R$ {p.price.toFixed(2)}</span>
+                    <span>{formatPrice(p)}</span>
                   </div>
                   <div className="t-qty">
                     <button onClick={() => updateQty(p.id, -1)}>−</button>
@@ -495,7 +498,7 @@ function Index() {
             </div>
             <div className="t-subtotal">
               <span>{tx.subtotal}</span>
-              <strong>R$ {subtotal.toFixed(2)}</strong>
+              <strong>{new Intl.NumberFormat(locale, { style: "currency", currency }).format(subtotal)}</strong>
             </div>
             {canShowCoinSubtotal && (
               <div className="t-subtotal t-subtotal-coins">
